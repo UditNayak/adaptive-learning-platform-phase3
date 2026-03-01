@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
+    # LLM
+    GROQ_API_KEY: str
+    GROQ_MODEL: str
+    LLM_PROVIDER: str
+
     @property
     def DATABASE_URL(self) -> str:
         return (
