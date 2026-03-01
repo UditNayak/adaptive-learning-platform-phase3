@@ -3,6 +3,8 @@ from app.repositories.chat_repo import ChatRepository
 from app.models.chat_session import ChatSession, KnowledgeLevel
 from app.models.chat_message import ChatMessage, MessageRole, MessageType
 from app.llm.factory import get_llm_provider
+from app.llm.prompt_builder import build_explanation_prompt
+from app.llm.response_parser import parse_explanation_response
 
 
 class ChatService:
@@ -23,20 +25,27 @@ class ChatService:
 
         session = self.repo.create_session(session)
 
-        prompt = f"""
-        Explain the topic '{topic_name}' for a {knowledge_level} level student.
-        {topic_description or ""}
-        """
+        prompt = build_explanation_prompt(
+            topic_name=topic_name,
+            knowledge_level=knowledge_level,
+            description=topic_description
+        )
 
-        response = self.llm.generate(
+        raw_response = self.llm.generate(
             messages=[{"role": "user", "content": prompt}]
         )
+
+        parsed = parse_explanation_response(raw_response)
+
+        session.title = parsed.get("title")
+        self.repo.db.commit()
+        self.repo.db.refresh(session)
 
         message = ChatMessage(
             chat_session_id=session.id,
             role=MessageRole.ASSISTANT,
             message_type=MessageType.EXPLANATION,
-            content=response
+            content=parsed.get("explanation")
         )
 
         self.repo.create_message(message)
