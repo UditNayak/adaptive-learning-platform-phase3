@@ -16,7 +16,8 @@ sys.path.append(
 # Import your app config and models
 # ---------------------------------------------------------
 from app.config import settings
-from app.db.base import Base  # This must import all models
+from app.db.base import Base
+import app.models
 
 # ---------------------------------------------------------
 # Alembic Config object

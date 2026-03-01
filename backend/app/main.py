@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from sqlalchemy import text
 from app.db.session import engine
+from app.routers.auth_router import router as auth_router
 
 app = FastAPI(title="Adaptive Learning Platform")
+
+app.include_router(auth_router)
 
 
 @app.get("/health")
