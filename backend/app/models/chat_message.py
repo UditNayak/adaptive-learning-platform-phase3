@@ -1,6 +1,7 @@
+import enum
+
 from sqlalchemy import Column, String, Enum, ForeignKey, Text
 from sqlalchemy.dialects.postgresql import UUID
-import enum
 
 from app.models.base_entity import BaseEntity
 
@@ -13,6 +14,7 @@ class MessageRole(str, enum.Enum):
 class MessageType(str, enum.Enum):
     EXPLANATION = "EXPLANATION"
     DOUBT = "DOUBT"
+    QUIZ = "QUIZ"
     GENERAL = "GENERAL"
 
 
@@ -21,8 +23,9 @@ class ChatMessage(BaseEntity):
 
     chat_session_id = Column(UUID(as_uuid=True), ForeignKey("chat_sessions.id"), nullable=False)
 
-    role = Column(Enum(MessageRole), nullable=False)
-    message_type = Column(Enum(MessageType), nullable=False)
+    role = Column(Enum(MessageRole, native_enum=False), nullable=False)
+
+    message_type = Column(Enum(MessageType, native_enum=False), nullable=False)
 
     content = Column(Text, nullable=False)
 

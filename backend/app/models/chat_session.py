@@ -1,6 +1,7 @@
+import enum
+
 from sqlalchemy import Column, String, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-import enum
 
 from app.models.base_entity import BaseEntity
 
@@ -19,7 +20,8 @@ class ChatSession(BaseEntity):
     topic_name = Column(String, nullable=False)
     topic_description = Column(String, nullable=True)
 
-    initial_knowledge_level = Column(Enum(KnowledgeLevel), nullable=False)
-    current_level = Column(Enum(KnowledgeLevel), nullable=False)
+    initial_knowledge_level = Column(Enum(KnowledgeLevel, native_enum=False), nullable=False)
+
+    current_level = Column(Enum(KnowledgeLevel, native_enum=False), nullable=False)
 
     title = Column(String, nullable=True)

@@ -1,8 +1,8 @@
 """add chat session and messages
 
-Revision ID: 9433cae89109
-Revises: 104cdd4f1019
-Create Date: 2026-03-01 16:04:46.511102
+Revision ID: 63921805110d
+Revises: cc2fc89978c6
+Create Date: 2026-03-01 17:42:54.949158
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9433cae89109'
-down_revision: Union[str, Sequence[str], None] = '104cdd4f1019'
+revision: str = '63921805110d'
+down_revision: Union[str, Sequence[str], None] = 'cc2fc89978c6'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -25,8 +25,8 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('topic_name', sa.String(), nullable=False),
     sa.Column('topic_description', sa.String(), nullable=True),
-    sa.Column('initial_knowledge_level', sa.Enum('BEGINNER', 'INTERMEDIATE', 'PRO', name='knowledgelevel'), nullable=False),
-    sa.Column('current_level', sa.Enum('BEGINNER', 'INTERMEDIATE', 'PRO', name='knowledgelevel'), nullable=False),
+    sa.Column('initial_knowledge_level', sa.Enum('BEGINNER', 'INTERMEDIATE', 'PRO', name='knowledgelevel', native_enum=False), nullable=False),
+    sa.Column('current_level', sa.Enum('BEGINNER', 'INTERMEDIATE', 'PRO', name='knowledgelevel', native_enum=False), nullable=False),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
@@ -36,8 +36,8 @@ def upgrade() -> None:
     )
     op.create_table('chat_messages',
     sa.Column('chat_session_id', sa.UUID(), nullable=False),
-    sa.Column('role', sa.Enum('USER', 'ASSISTANT', name='messagerole'), nullable=False),
-    sa.Column('message_type', sa.Enum('EXPLANATION', 'DOUBT', 'GENERAL', name='messagetype'), nullable=False),
+    sa.Column('role', sa.Enum('USER', 'ASSISTANT', name='messagerole', native_enum=False), nullable=False),
+    sa.Column('message_type', sa.Enum('EXPLANATION', 'DOUBT', 'QUIZ', 'GENERAL', name='messagetype', native_enum=False), nullable=False),
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('reply_to_message_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
