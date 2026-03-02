@@ -47,7 +47,10 @@ class QuizService:
             chat_session_id=chat_session.id,
             role=MessageRole.ASSISTANT,
             message_type=MessageType.QUIZ,
-            content=parsed["question"]
+            content="Quiz generated",
+            metadata_json={
+                "quiz_id": str(quiz.id)
+            }
         )
 
         self.db.add(message)
