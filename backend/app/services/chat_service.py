@@ -54,6 +54,7 @@ class ChatService:
 
     def send_message(self, chat_session_id, content, reply_to_message_id=None):
 
+        # Save user message first
         user_message = ChatMessage(
             chat_session_id=chat_session_id,
             role=MessageRole.USER,
@@ -64,9 +65,30 @@ class ChatService:
 
         self.repo.create_message(user_message)
 
-        messages = [{"role": "user", "content": content}]
+        # Build prompt
+        if reply_to_message_id:
+            referenced = self.repo.get_message(reply_to_message_id)
 
-        response = self.llm.generate(messages=messages)
+            if referenced:
+                prompt = f"""
+    User is replying to the following message:
+
+    ----------------------
+    {referenced.content}
+    ----------------------
+
+    User question:
+    {content}
+    """
+            else:
+                prompt = content
+        else:
+            prompt = content
+
+        # Send to LLM
+        response = self.llm.generate(
+            messages=[{"role": "user", "content": prompt}]
+        )
 
         assistant_message = ChatMessage(
             chat_session_id=chat_session_id,
