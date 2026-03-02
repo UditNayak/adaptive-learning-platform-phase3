@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     GROQ_MODEL: str
     LLM_PROVIDER: str
 
+    # Search
+    SEARXNG_URL: str
+
     @property
     def DATABASE_URL(self) -> str:
         return (

@@ -6,6 +6,7 @@ from app.routers.chat_router import router as chat_router
 from app.routers.quiz_router import router as quiz_router
 from app.routers.feedback_router import router as feedback_router
 from app.routers.analytics_router import router as analytics_router
+from app.routers.reference_router import router as reference_router
 
 app = FastAPI(title="Adaptive Learning Platform")
 
@@ -14,6 +15,7 @@ app.include_router(chat_router)
 app.include_router(quiz_router)
 app.include_router(feedback_router)
 app.include_router(analytics_router)
+app.include_router(reference_router)
 
 
 @app.get("/health")

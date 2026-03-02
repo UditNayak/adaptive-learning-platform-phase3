@@ -1,6 +1,6 @@
 # Adaptive Learning Platform - Phase 3
 
-AI-powered adaptive learning system with chat-based tutoring, quizzes, and progress tracking.
+AI-powered adaptive learning system with chat-based tutoring, quizzes, progress tracking, and reference material recommendations.
 
 ***For Detailed Documentation, refer to:*** [Phase-3 Proposal Doc](https://docs.google.com/document/d/1vDqKU6d4IlpRKwyX2emUjY5XjjH3chIDVsmdPpdN8Ng/edit?usp=sharing)
 
@@ -39,6 +39,10 @@ adaptive-learning-phase3/
 │   │   ├── services/             # Business logic layer
 │   │   ├── routers/              # API route definitions
 │   │   ├── llm/                  # LLM providers & prompt handling
+│   │   ├── search/               # Search providers (SearXNG)
+│   │   │   ├── base_provider.py
+│   │   │   ├── searxng_provider.py
+│   │   │   └── factory.py
 │   │   └── utils/                # Security & helper utilities
 │   │
 │   ├── alembic/                  # Database migrations
@@ -49,10 +53,13 @@ adaptive-learning-phase3/
 │   ├── requirements.txt
 │   └── Dockerfile
 │
+├── searxng/                      # SearXNG search engine config
+│   └── settings.yml
+│
 ├── assets/                       # Diagrams & static assets
 │   └── DB_Schema_Diagram.png
 │
-├── docker-compose.yaml           # Multi-container setup
+├── docker-compose.yaml           # Multi-container setup (DB + Backend + SearXNG)
 └── README.md
 ```
 
@@ -153,7 +160,8 @@ docker compose down -v
 
 - **Frontend (Streamlit)**: http://localhost:8501
 - **Backend API**: http://localhost:8000
-- **PostgreSQL**: http://localhost:5432
+- **SearXNG Search**: http://localhost:8080
+- **PostgreSQL**: localhost:5432
 
 **For API Documentation (Swagger)**: http://localhost:8000/docs
 
