@@ -5,6 +5,8 @@ from app.llm.prompt_builder import build_quiz_prompt
 from app.llm.response_parser import parse_quiz_response
 
 from app.repositories.quiz_repo import QuizRepository
+from app.services.progress_service import ProgressService
+from app.models.chat_session import ChatSession
 from app.models.quiz import Quiz
 from app.models.quiz_attempt import QuizAttempt
 from app.models.chat_message import ChatMessage, MessageRole, MessageType
@@ -70,9 +72,28 @@ class QuizService:
 
         self.repo.create_attempt(attempt)
 
+        # Update topic progress
+        session = self.db.query(ChatSession).filter(
+            ChatSession.id == quiz.chat_session_id
+        ).first()
+
+        progress_service = ProgressService(self.db)
+        progress = progress_service.update_progress(
+            user_id=user_id,
+            topic_name=session.topic_name,
+            points_awarded=points,
+            is_correct=is_correct
+        )
+
+        # Sync session level
+        session.current_level = progress.current_level
+        self.db.commit()
+
         return {
             "correct": is_correct,
             "points_awarded": points,
             "explanation": quiz.explanation,
-            "hint": None if is_correct else quiz.hint
+            "hint": None if is_correct else quiz.hint,
+            "new_level": progress.current_level,
+            "total_points": progress.total_points
         }
