@@ -8,4 +8,5 @@ alembic
 bcrypt
 email-validator
 groq
+pytest
 httpx
