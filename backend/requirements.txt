@@ -8,3 +8,4 @@ alembic
 bcrypt
 email-validator
 groq
+httpx
