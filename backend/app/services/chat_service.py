@@ -46,7 +46,10 @@ class ChatService:
             chat_session_id=session.id,
             role=MessageRole.ASSISTANT,
             message_type=MessageType.EXPLANATION,
-            content=parsed.get("explanation")
+            content=parsed.get("explanation"),
+            metadata_json={
+                "references": parsed.get("references", [])
+            }
         )
 
         self.repo.create_message(message)
@@ -71,6 +74,7 @@ class ChatService:
                 "message_type": msg.message_type.value,
                 "content": msg.content,
                 "created_at": msg.created_at,
+                "metadata_json": msg.metadata_json,
                 "quiz_data": None
             }
 

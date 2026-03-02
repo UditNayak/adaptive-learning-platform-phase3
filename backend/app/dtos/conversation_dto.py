@@ -11,6 +11,7 @@ class ConversationItemDTO(BaseModel):
     content: str
     created_at: datetime
 
+    metadata_json: Optional[Dict[str, Any]] = None
     quiz_data: Optional[Dict[str, Any]] = None
 
     class Config:

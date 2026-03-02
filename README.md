@@ -51,6 +51,11 @@ adaptive-learning-phase3/
 │
 ├── assets/                       # Diagrams & static assets
 │   └── DB_Schema_Diagram.png
+|
+├── tests/                        # Test files
+│   ├── conftest.py               # Test configuration
+│   ├── integration/              # Integration tests
+│   └── unit/                     # Unit tests
 │
 ├── docker-compose.yaml           # Multi-container setup
 └── README.md

@@ -13,12 +13,25 @@ Return STRICTLY in JSON format like:
 
 {{
   "title": "Short 4-6 word chat title",
-  "explanation": "Detailed explanation here..."
+  "explanation": "Detailed explanation here...",
+  "references": [
+      {{
+          "title": "Reference title",
+          "url": "https://example.com"
+      }},
+      {{
+          "title": "Reference title",
+          "url": "https://example.com"
+      }}
+  ]
 }}
 
-Do not include markdown.
-Do not include extra text.
-Return valid JSON only.
+Rules:
+- Provide 2-4 high-quality references.
+- Prefer Wikipedia, official docs, reputed blogs.
+- URLs must be valid and complete.
+- Do not include markdown.
+- Return valid JSON only.
 """
 
 
