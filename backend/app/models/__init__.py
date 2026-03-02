@@ -6,3 +6,4 @@ from app.models.chat_message import ChatMessage
 from app.models.quiz import Quiz
 from app.models.quiz_attempt import QuizAttempt
 from app.models.topic_progress import TopicProgress
+from app.models.message_feedback import MessageFeedback
