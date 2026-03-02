@@ -1,6 +1,6 @@
 import enum
-from sqlalchemy import Column, String, Integer, ForeignKey, Text
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Integer, ForeignKey, Text, JSON
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.models.base_entity import BaseEntity
 
@@ -12,7 +12,7 @@ class Quiz(BaseEntity):
 
     question_text = Column(Text, nullable=False)
 
-    options_json = Column(JSONB, nullable=False)
+    options_json = Column(JSON, nullable=False)
     correct_option = Column(String, nullable=False)
 
     difficulty = Column(String, nullable=False)

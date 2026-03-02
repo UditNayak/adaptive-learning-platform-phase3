@@ -1,7 +1,7 @@
 import enum
 
-from sqlalchemy import Column, String, Enum, ForeignKey, Text
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Enum, ForeignKey, Text, JSON
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.models.base_entity import BaseEntity
 
@@ -31,4 +31,4 @@ class ChatMessage(BaseEntity):
 
     reply_to_message_id = Column(UUID(as_uuid=True), ForeignKey("chat_messages.id"), nullable=True)
 
-    metadata_json = Column(JSONB, nullable=True)
+    metadata_json = Column(JSON, nullable=True)
