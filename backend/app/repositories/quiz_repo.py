@@ -22,3 +22,14 @@ class QuizRepository:
         self.db.commit()
         self.db.refresh(attempt)
         return attempt
+
+    def get_attempt_for_user(self, quiz_id, user_id):
+        return (
+            self.db.query(QuizAttempt)
+            .filter(
+                QuizAttempt.quiz_id == quiz_id,
+                QuizAttempt.user_id == user_id
+            )
+            .order_by(QuizAttempt.created_at.desc())
+            .first()
+        )

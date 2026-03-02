@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.repositories.chat_repo import ChatRepository
+from app.repositories.quiz_repo import QuizRepository
 from app.models.chat_session import ChatSession, KnowledgeLevel
 from app.models.chat_message import ChatMessage, MessageRole, MessageType
 from app.llm.factory import get_llm_provider
@@ -51,6 +52,52 @@ class ChatService:
         self.repo.create_message(message)
 
         return session
+
+    def list_user_sessions(self, user_id):
+        return self.repo.get_user_sessions(user_id)
+
+    def get_conversation(self, chat_session_id, user_id):
+
+        messages = self.repo.get_session_messages(chat_session_id)
+        quiz_repo = QuizRepository(self.repo.db)
+
+        conversation = []
+
+        for msg in messages:
+
+            item = {
+                "id": msg.id,
+                "role": msg.role.value,
+                "message_type": msg.message_type.value,
+                "content": msg.content,
+                "created_at": msg.created_at,
+                "quiz_data": None
+            }
+
+            if msg.message_type == MessageType.QUIZ and msg.metadata_json:
+
+                quiz_id = msg.metadata_json.get("quiz_id")
+
+                if quiz_id:
+                    quiz = quiz_repo.get_quiz(quiz_id)
+                    attempt = quiz_repo.get_attempt_for_user(quiz_id, user_id)
+
+                    item["quiz_data"] = {
+                        "question": quiz.question_text,
+                        "options": quiz.options_json,
+                        "correct_option": quiz.correct_option,
+                        "difficulty": quiz.difficulty,
+                        "points": quiz.points,
+                        "hint": quiz.hint,
+                        "explanation": quiz.explanation,
+                        "selected_option": attempt.selected_option if attempt else None,
+                        "is_correct": attempt.is_correct if attempt else None,
+                        "points_awarded": attempt.points_awarded if attempt else None
+                    }
+
+            conversation.append(item)
+
+        return conversation
 
     def send_message(self, chat_session_id, content, reply_to_message_id=None):
 

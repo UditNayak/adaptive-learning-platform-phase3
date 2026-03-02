@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict
 from uuid import UUID
+from datetime import datetime
 
 
 class ChatCreateDTO(BaseModel):
@@ -24,6 +25,17 @@ class ChatSessionResponseDTO(BaseModel):
     initial_knowledge_level: str
     current_level: str
     title: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
+class ChatSessionListDTO(BaseModel):
+    id: UUID
+    topic_name: str
+    title: Optional[str]
+    current_level: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
