@@ -69,7 +69,7 @@ Edit the .env file with your own credentials.
 ### 1. Start Services
 
 ```bash
-docker compose up --build -d
+docker compose -f docker-compose.yaml up --build -d
 ```
 
 ### 2. Check Running Containers
@@ -96,23 +96,62 @@ docker compose exec backend alembic revision --autogenerate -m "your message"
 docker exec -it adaptive_db psql -U postgres -d adaptive_db
 ```
 
+### 4. Running Tests (Isolated Test Environment)
+We use a separate compose file for testing to ensure:
+- No volume mounting
+- Clean isolated container
+- Deterministic test execution
+- No external LLM calls (LLM is mocked)
 
-### 4. Stop Containers
+#### 4.1 Run Tests
+
+```bash
+docker compose -f docker-compose.dev.yaml run --rm backend pytest -v -p no:warnings
+```
+
+#### 4.2. Expected Output
+
+```
+collected 7 items
+
+tests/integration/test_auth_api.py::test_signup_api PASSED
+tests/integration/test_chat_api.py::test_create_chat_api PASSED
+tests/unit/test_analytics_service.py::test_accuracy_calculation PASSED
+tests/unit/test_auth_service.py::test_signup_success PASSED
+tests/unit/test_auth_service.py::test_signup_duplicate PASSED
+tests/unit/test_progress_service.py::test_level_upgrade PASSED
+tests/unit/test_quiz_service.py::test_submit_wrong_answer PASSED
+
+7 passed in 1.xx s
+```
+
+
+### 5. Stop Containers
 
 ```bash
 docker compose down
 ```
 
-#### 4.1 Stop and Remove Volumes (Deletes DB Data)
+#### 5.1 Stop and Remove Volumes (Deletes DB Data)
 
 ```bash
 docker compose down -v
 ```
 **Note:** This will permanently delete database data.
 
+## Which Compose File Is Used For What
+| File                      | Purpose                                                     |
+| ------------------------- | ----------------------------------------------------------- |
+| `docker-compose.yaml`     | Main development environment (with backend volume mount)    |
+| `docker-compose.dev.yaml` | Test-only environment (no volume mount, isolated execution) |
+
+**Use:**
+- `docker-compose.yaml` → to run the application
+- `docker-compose.dev.yaml` → to run test suite
+
 ## Accessing the Application
 
-- **Frontend**: http://localhost:8501
+- **Frontend (Streamlit)**: http://localhost:8501
 - **Backend API**: http://localhost:8000
 - **PostgreSQL**: http://localhost:5432
 
