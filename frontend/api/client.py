@@ -4,7 +4,7 @@ BACKEND_URL = "http://backend:8000"
 
 
 def signup(name: str, email: str, password: str):
-    response = requests.post(
+    return requests.post(
         f"{BACKEND_URL}/auth/signup",
         json={
             "name": name,
@@ -12,18 +12,23 @@ def signup(name: str, email: str, password: str):
             "password": password
         }
     )
-    return response
 
 
 def login(email: str, password: str):
-    response = requests.post(
+    return requests.post(
         f"{BACKEND_URL}/auth/login",
         json={
             "email": email,
             "password": password
         }
     )
-    return response
+
+
+def get_user_chats(user_id: str):
+    return requests.get(
+        f"{BACKEND_URL}/chat/user/{user_id}"
+    )
+
 
 def parse_error(response):
     try:

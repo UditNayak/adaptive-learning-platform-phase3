@@ -1,17 +1,20 @@
 import streamlit as st
-from state.session_manager import logout_user
+from components.sidebar import render_sidebar
 
 
 def render_dashboard():
 
-    st.title("Dashboard")
+    render_sidebar()
 
-    user = st.session_state.user
+    if st.session_state.page == "analytics":
+        st.title("Analytics Page (Coming in F4)")
+        return
 
-    st.write(f"Welcome, {user['name']}")
+    selected_chat_id = st.session_state.selected_chat_id
 
-    if st.button("Logout"):
-        logout_user()
-        st.rerun()
-
-    st.info("Chat and analytics UI will be implemented in next phase.")
+    if selected_chat_id:
+        st.title("Chat View (Rendering in F3)")
+        st.write(f"Selected Chat ID: {selected_chat_id}")
+    else:
+        st.title("Start a New Chat")
+        st.info("New chat form will be implemented in F3.")
