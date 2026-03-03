@@ -33,12 +33,17 @@ def render_chat_page():
 
         if st.button("Start Learning"):
 
-            response = create_chat(
-                user_id,
-                topic_name,
-                topic_description,
-                knowledge_level
-            )
+            if not topic_name.strip():
+                st.warning("Topic name is required.")
+                return
+
+            with st.spinner("Creating learning session..."):
+                response = create_chat(
+                    user_id,
+                    topic_name,
+                    topic_description,
+                    knowledge_level
+                )
 
             if response.status_code == 200:
                 chat = response.json()
@@ -52,7 +57,9 @@ def render_chat_page():
     # -------------------------
     # HEADER
     # -------------------------
-    detail_response = get_chat_detail(selected_chat_id)
+    with st.spinner("Loading session..."):
+        detail_response = get_chat_detail(selected_chat_id)
+
     if detail_response.status_code != 200:
         st.error("Failed to load chat details")
         return
@@ -80,42 +87,47 @@ def render_chat_page():
     # -------------------------
     # LOAD CONVERSATION
     # -------------------------
-    response = get_conversation(selected_chat_id, user_id)
+    with st.spinner("Loading conversation..."):
+        response = get_conversation(selected_chat_id, user_id)
+
     if response.status_code != 200:
         st.error("Failed to load conversation")
         return
 
     conversation = response.json()
 
-    for item in conversation:
+    if not conversation:
+        st.info("No messages yet. Start learning!")
+    else:
+        for item in conversation:
 
-        if item["message_type"] == "EXPLANATION":
-            render_explanation(item["content"], item.get("metadata_json"))
+            if item["message_type"] == "EXPLANATION":
+                render_explanation(item["content"], item.get("metadata_json"))
 
-        elif item["message_type"] == "QUIZ":
-            render_chat_bubble(item["id"], item["role"], item["content"])
+            elif item["message_type"] == "QUIZ":
+                render_chat_bubble(item["id"], item["role"], item["content"])
 
-            if item.get("quiz_data"):
-                item["quiz_data"]["quiz_id"] = item["metadata_json"]["quiz_id"]
-                render_quiz_block(item["quiz_data"], user_id)
+                if item.get("quiz_data"):
+                    item["quiz_data"]["quiz_id"] = item["metadata_json"]["quiz_id"]
+                    render_quiz_block(item["quiz_data"], user_id)
 
-        else:
-            render_chat_bubble(item["id"], item["role"], item["content"])
+            else:
+                render_chat_bubble(item["id"], item["role"], item["content"])
 
     # -------------------------
     # ACTION BUTTONS
     # -------------------------
     st.markdown("---")
 
-    col1, col2 = st.columns(2)
+    if st.button("Test My Understanding"):
 
-    with col1:
-        if st.button("Test My Understanding"):
+        with st.spinner("Generating quiz..."):
             response = generate_quiz(selected_chat_id)
-            if response.status_code == 200:
-                st.rerun()
-            else:
-                st.error("Failed to generate quiz")
+
+        if response.status_code == 200:
+            st.rerun()
+        else:
+            st.error("Failed to generate quiz")
 
     # -------------------------
     # MESSAGE INPUT
@@ -123,7 +135,10 @@ def render_chat_page():
     user_input = st.chat_input("Ask a doubt...")
 
     if user_input:
-        response = send_message(selected_chat_id, user_input)
+
+        with st.spinner("Thinking..."):
+            response = send_message(selected_chat_id, user_input)
+
         if response.status_code == 200:
             st.rerun()
         else:

@@ -2,14 +2,16 @@ import streamlit as st
 
 
 def init_session():
-    if "user" not in st.session_state:
-        st.session_state["user"] = None
+    defaults = {
+        "user": None,
+        "selected_chat_id": None,
+        "page": "chat",
+        "loading": False,
+    }
 
-    if "selected_chat_id" not in st.session_state:
-        st.session_state["selected_chat_id"] = None
-
-    if "page" not in st.session_state:
-        st.session_state["page"] = "chat"
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
 
 
 def login_user(user_data: dict):
