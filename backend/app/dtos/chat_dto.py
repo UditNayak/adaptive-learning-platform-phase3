@@ -36,6 +36,8 @@ class ChatSessionListDTO(BaseModel):
     title: Optional[str]
     current_level: str
     created_at: datetime
+    topic_description: Optional[str] = None
+    initial_knowledge_level: str
 
     class Config:
         from_attributes = True

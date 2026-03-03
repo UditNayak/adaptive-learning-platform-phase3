@@ -30,6 +30,30 @@ def get_user_chats(user_id: str):
     )
 
 
+def get_chat_detail(chat_session_id: str):
+    return requests.get(
+        f"{BACKEND_URL}/chat/{chat_session_id}"
+    )
+
+
+def create_chat(user_id, topic_name, topic_description, knowledge_level):
+    return requests.post(
+        f"{BACKEND_URL}/chat/create",
+        json={
+            "user_id": user_id,
+            "topic_name": topic_name,
+            "topic_description": topic_description,
+            "knowledge_level": knowledge_level
+        }
+    )
+
+
+def get_conversation(chat_session_id, user_id):
+    return requests.get(
+        f"{BACKEND_URL}/chat/{chat_session_id}/conversation/{user_id}"
+    )
+
+
 def parse_error(response):
     try:
         data = response.json()
