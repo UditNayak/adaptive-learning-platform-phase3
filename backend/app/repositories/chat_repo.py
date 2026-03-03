@@ -38,3 +38,10 @@ class ChatRepository:
             .order_by(ChatMessage.created_at.asc())
             .all()
         )
+
+    def get_session(self, chat_session_id):
+        return (
+            self.db.query(ChatSession)
+            .filter(ChatSession.id == chat_session_id)
+            .first()
+        )

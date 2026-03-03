@@ -59,6 +59,9 @@ class ChatService:
     def list_user_sessions(self, user_id):
         return self.repo.get_user_sessions(user_id)
 
+    def get_chat_session_detail(self, chat_session_id):
+        return self.repo.get_session(chat_session_id)
+
     def get_conversation(self, chat_session_id, user_id):
 
         messages = self.repo.get_session_messages(chat_session_id)

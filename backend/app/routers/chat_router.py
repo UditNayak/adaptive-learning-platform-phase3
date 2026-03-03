@@ -50,3 +50,9 @@ def get_full_conversation(chat_session_id: UUID,
 
     service = ChatService(db)
     return service.get_conversation(chat_session_id, user_id)
+
+
+@router.get("/{chat_session_id}", response_model=ChatSessionListDTO)
+def get_chat_session_detail(chat_session_id: UUID, db: Session = Depends(get_db)):
+    service = ChatService(db)
+    return service.get_chat_session_detail(chat_session_id)
