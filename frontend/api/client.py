@@ -25,15 +25,11 @@ def login(email: str, password: str):
 
 
 def get_user_chats(user_id: str):
-    return requests.get(
-        f"{BACKEND_URL}/chat/user/{user_id}"
-    )
+    return requests.get(f"{BACKEND_URL}/chat/user/{user_id}")
 
 
 def get_chat_detail(chat_session_id: str):
-    return requests.get(
-        f"{BACKEND_URL}/chat/{chat_session_id}"
-    )
+    return requests.get(f"{BACKEND_URL}/chat/{chat_session_id}")
 
 
 def create_chat(user_id, topic_name, topic_description, knowledge_level):
@@ -90,6 +86,12 @@ def send_feedback(message_id, is_helpful, feedback_text=None):
             "is_helpful": is_helpful,
             "feedback_text": feedback_text
         }
+    )
+
+
+def get_user_analytics(user_id: str):
+    return requests.get(
+        f"{BACKEND_URL}/analytics/user/{user_id}"
     )
 
 
