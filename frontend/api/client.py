@@ -54,6 +54,45 @@ def get_conversation(chat_session_id, user_id):
     )
 
 
+def send_message(chat_session_id, content):
+    return requests.post(
+        f"{BACKEND_URL}/chat/message",
+        json={
+            "chat_session_id": chat_session_id,
+            "content": content
+        }
+    )
+
+
+def generate_quiz(chat_session_id):
+    return requests.post(
+        f"{BACKEND_URL}/quiz/generate",
+        json={"chat_session_id": chat_session_id}
+    )
+
+
+def submit_quiz(quiz_id, user_id, selected_option):
+    return requests.post(
+        f"{BACKEND_URL}/quiz/submit",
+        json={
+            "quiz_id": quiz_id,
+            "user_id": user_id,
+            "selected_option": selected_option
+        }
+    )
+
+
+def send_feedback(message_id, is_helpful, feedback_text=None):
+    return requests.post(
+        f"{BACKEND_URL}/feedback/",
+        json={
+            "message_id": message_id,
+            "is_helpful": is_helpful,
+            "feedback_text": feedback_text
+        }
+    )
+
+
 def parse_error(response):
     try:
         data = response.json()

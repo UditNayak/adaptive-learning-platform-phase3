@@ -38,6 +38,7 @@ class ChatSessionListDTO(BaseModel):
     created_at: datetime
     topic_description: Optional[str] = None
     initial_knowledge_level: str
+    total_points: Optional[int] = None
 
     class Config:
         from_attributes = True

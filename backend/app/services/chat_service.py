@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.repositories.chat_repo import ChatRepository
 from app.repositories.quiz_repo import QuizRepository
+from app.repositories.progress_repo import ProgressRepository
 from app.models.chat_session import ChatSession, KnowledgeLevel
 from app.models.chat_message import ChatMessage, MessageRole, MessageType
 from app.llm.factory import get_llm_provider
@@ -60,7 +61,18 @@ class ChatService:
         return self.repo.get_user_sessions(user_id)
 
     def get_chat_session_detail(self, chat_session_id):
-        return self.repo.get_session(chat_session_id)
+
+        session = self.repo.get_session(chat_session_id)
+
+        progress_repo = ProgressRepository(self.repo.db)
+        progress = progress_repo.get_progress(
+            session.user_id,
+            session.topic_name
+        )
+
+        session.total_points = progress.total_points if progress else 0
+
+        return session
 
     def get_conversation(self, chat_session_id, user_id):
 
